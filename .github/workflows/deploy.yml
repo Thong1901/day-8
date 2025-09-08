@@ -34,7 +34,7 @@ jobs:
               ${{ runner.os }}-pnpm-    
       # 3. Cài dependencies
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --no-frozen-lockfile
       # 4. Build project
       - name: Build project
         run: pnpm run build
