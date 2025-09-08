@@ -1,0 +1,10 @@
+version: "3.9"
+
+services:
+  vue-app:
+    image: thongmai1901/client-day8:latest
+    container_name: vue-app
+    ports:
+      - "80:80"
+      - "443:443"
+    restart: always

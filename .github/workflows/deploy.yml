@@ -1,0 +1,46 @@
+name: CI/CD Node.js
+
+on:
+  push:
+    branches: [ "main" ]   # chạy khi push lên main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout code
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Setup Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+      
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      # 3. Cài dependencies
+      - name: Install dependencies
+        run: pnpm install
+      # 4. Build project
+      - name: Build project
+        run: pnpm run build
+
+      # 6. Deploy dist/ lên server
+      - name: Deploy to server
+        uses: burnett01/rsync-deployments@7.1.0
+        with:
+          switches: -avzr --delete
+          path: dist/
+          remote_path: /var/www/html
+          remote_user: ${{ secrets.DEPLOY_USER }}
+          remote_host: ${{ secrets.DEPLOY_HOST }}
+          remote_port: ${{ secrets.DEPLOY_PORT }}
+          remote_key: ${{ secrets.DEPLOY_KEY }}
+
+      
